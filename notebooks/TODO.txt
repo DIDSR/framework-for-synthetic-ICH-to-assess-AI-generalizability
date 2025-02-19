@@ -1,0 +1,3 @@
+Upon submission: rename notebooks in accordance to figure number
+
+i.e., create_ROC.ipynb -> Fig4_create_ROC.ipynb
