@@ -89,7 +89,7 @@ def prepare_images(filepath, options, ID, save_dir):
                         filenm = file.split('.')[0]
                         dicom = pydicom.dcmread(os.path.join(filepath, file))
                         image = dicom.pixel_array
-                        
+
                         image = image * dicom.RescaleSlope + dicom.RescaleIntercept
                         if idx == 0:
                             dcm_volume = np.zeros((len(files), image.shape[0], image.shape[1]))
@@ -102,6 +102,14 @@ def prepare_images(filepath, options, ID, save_dir):
             for i in range(new_volume.shape[0]):
                 #try:
                 image = new_volume[i, :, :]
+
+                if options['save_dcm']:
+                    ds = dicom
+                    ds.PatientName = ds.PatientID = str(ID)
+                    ds.PixelData = (image - dicom.RescaleIntercept).astype(np.int16)
+                    ds.SliceThickness = 5
+                    ds.save_as(os.path.join(save_dir, str(ID)) + '_' + str(i) + '_5mm.dcm')
+                    
                 image = apply_window_policy(image)
                 image -= image.min((0,1))
                 image = (255*image).astype(np.uint8)
