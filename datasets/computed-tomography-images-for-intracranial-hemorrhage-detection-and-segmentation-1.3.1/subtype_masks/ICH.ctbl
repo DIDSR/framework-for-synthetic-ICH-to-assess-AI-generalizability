@@ -1,0 +1,7 @@
+# Color table file C:/Users/Jayse.Weaver/OneDrive - FDA/Desktop/computed-tomography-images-for-intracranial-hemorrhage-detection-and-segmentation-1.3.1/subtype_masks/ICH.ctbl
+# 6 values
+1 EDH 0 255 0 255
+2 IPH 255 255 0 255
+3 IVH 170 0 255 255
+4 SAH 255 0 0 255
+5 SDH 0 255 255 255
