@@ -178,10 +178,9 @@ def prepare_images(filepath, options, ID, save_dir):
 
     return volume, filepath
 
-def classify_images(volume, options):
+def classify_images(volume, options, device):
     """Receive input volume of dimensions [num_images, 3, 480, 480] and
     performs classification with pre-trained models"""
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     num_images = volume.shape[0]
     if options['verbose']: print('Starting classification')
