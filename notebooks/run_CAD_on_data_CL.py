@@ -60,6 +60,8 @@ for dataset in dataset_names:
     with tqdm(total=max_count) as pbar:
         for index, case in enumerate(cases):
 
+            print('processing : ' + str(case))
+
             pbar.update(1)
 
             id = str(case) + '_std'
