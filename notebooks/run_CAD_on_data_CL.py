@@ -17,7 +17,7 @@ options = {
     'save_dcm': False,
     'save_csv': True,
     'verbose': False,
-    'native_resolution': False # synthetic data is 1 mm, "True" will reformat to 5 mm
+    'native_resolution': False # synthetic data is 1 mm, "False" will reformat to 5 mm
 }
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -25,8 +25,8 @@ print('using device ' + str(device))
 
 #dataset_path = Path('../datasets')
 dataset_path = Path('/projects01/didsr-aiml/jayse.weaver/insilicoich/')
-dataset_names = ['mixed_2500_count']
-#dataset_names = ['mA_280_standard_run1', 'mA_280_standard_run2', 'mA_280_standard_run3']
+#dataset_names = ['mixed_2500_count']
+dataset_names = ['varymA_70_count500', 'varymA_280_count500', 'varymA_600_count500']
 
 save_dir = '/home/jayse.weaver/temp_images/new/' # optional save directory if save_jpg or save_dcm = True
 
@@ -70,14 +70,14 @@ for dataset in dataset_names:
 
                 # if case has hemorrhage, extract metadata from dataframe
                 # TODO: fix insilicoICH metadata generation (currently messy with added strings and brackets)
-                temp_df = metadata_dropna.loc[metadata_dropna['name'] == case]
+                temp_df = metadata_dropna.loc[metadata_dropna['Name'] == case]
 
-                lesion_type = temp_df['lesion type'].unique()[0] #.split("'")[1]
+                lesion_type = temp_df['Subtype'].unique()[0] #.split("'")[1]
                 type_syn.append(lesion_type)
 
-                volume_syn.append(temp_df['lesion volume [mL]'].sum())
+                volume_syn.append(temp_df['LesionVolume(mL)'].sum())
 
-                intensity = float(temp_df['intensity'].unique()[0][1:-1])
+                intensity = float(temp_df['LesionAttenuation(HU)'].unique()[0][1:-1])
                 intensity_syn.append(intensity)
 
             else: # case has no mask, therefore no hemorrhage
