@@ -178,7 +178,7 @@ def prepare_images(filepath, options, ID, save_dir):
 
     return volume, filepath
 
-def classify_images(volume, options, device):
+def classify_images(volume, options, model_path, device):
     """Receive input volume of dimensions [num_images, 3, 480, 480] and
     performs classification with pre-trained models"""
 
@@ -186,14 +186,14 @@ def classify_images(volume, options, device):
     if options['verbose']: print('Starting classification')
     
     # Load and set up classifier
-    classifier_model = torch.load('/home/jayse.weaver/model_files/resnext101_32x8d_wsl_checkpoint.pth', weights_only=False, map_location=device) # Load model arch
+    classifier_model = torch.load(model_path + 'resnext101_32x8d_wsl_checkpoint.pth', weights_only=False, map_location=device) # Load model arch
     classifier_model.fc = nn.Linear(2048, 6) # 6 classes
     classifier_model.to(device)
     # Model was trained with DDP so need this even with 1 GPU
     classifier_model = nn.DataParallel(classifier_model, device_ids=list(range(1)), output_device=device)
     for param in classifier_model.parameters():
         param.requires_grad = False
-    classifier_model.load_state_dict(torch.load('/home/jayse.weaver/model_files/model_480_epoch2_fold6.bin',  map_location=device)) # Load weights
+    classifier_model.load_state_dict(torch.load(model_path + 'model_480_epoch2_fold6.bin',  map_location=device)) # Load weights
 
     class Identity(nn.Module):
         def __init__(self):
@@ -263,7 +263,7 @@ def classify_images(volume, options, device):
     # Create model 
     lstm_model = NeuralNet(LSTM_UNITS=2048, DO = 0.3)
     lstm_model = lstm_model.to(device)
-    lstm_model.load_state_dict(torch.load('/home/jayse.weaver/model_files/lstm_gepoch2_lstmepoch11_fold6.bin',  map_location=device))
+    lstm_model.load_state_dict(torch.load(model_path + 'lstm_gepoch2_lstmepoch11_fold6.bin',  map_location=device))
     for param in lstm_model.parameters():
         param.requires_grad = False
 
