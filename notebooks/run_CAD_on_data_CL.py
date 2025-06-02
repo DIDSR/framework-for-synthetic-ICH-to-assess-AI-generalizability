@@ -26,8 +26,7 @@ print('using device ' + str(device))
 
 #dataset_path = Path('../datasets')
 dataset_path = Path('/projects01/didsr-aiml/jayse.weaver/insilicoich/')
-dataset_names = ['test_3']
-#dataset_names = ['varymA_70_count500', 'varymA_280_count500', 'varymA_600_count500']
+dataset_names = ['manuscript_100_280mA_wME', 'manuscript_100_280mA_noME']
 
 prepath = '/home/jayse.weaver/model_files/'
 model_names = ['CAD_1', 'CAD_2', 'CAD_3']
@@ -69,29 +68,29 @@ for model in model_names:
             for index, case in enumerate(cases):
 
                 pbar.update(1)
-
+                print(case)
                 id = str(case)
                 if os.path.isdir(Path.joinpath(path, case, 'lesion_masks/')): # check if case has mask and therefore hemorrhage
-                    try:
-                        # if case has hemorrhage, extract metadata from dataframe
-                        # TODO: fix insilicoICH metadata generation (currently messy with added strings and brackets)
-                        temp_df = metadata_dropna.loc[metadata_dropna['Name'] == case]
-                        
-                        attenuation = float(temp_df['LesionAttenuation(HU)'].unique()[0].replace('[','').replace(']',''))
-                        volume = temp_df['LesionVolume(mL)'].apply(lambda x: x.replace('[','').replace(']','')).astype(float).sum()
-                        lesion_type = temp_df['Subtype'].unique()[0].replace('[','').replace(']','')
+                    #try:
+                    # if case has hemorrhage, extract metadata from dataframe
+                    # TODO: fix insilicoICH metadata generation (currently messy with added strings and brackets)
+                    temp_df = metadata_dropna.loc[metadata_dropna['Name'] == case]
+                    
+                    attenuation = float(temp_df['LesionAttenuation(HU)'].unique()[0].replace('[','').replace(']',''))
+                    volume = temp_df['LesionVolume(mL)'].apply(lambda x: x.replace('[','').replace(']','')).astype(float).sum()
+                    lesion_type = temp_df['Subtype'].unique()[0].replace('[','').replace(']','')
 
-                        # try extracting all metadata before appending
-                        attenuation_list.append(attenuation)
-                        volume_list.append(volume)
-                        type_list.append(lesion_type)
-                        labels_list.append(1)
-                    except:
-                        print('Error')
-                        attenuation_list.append('NaN')
-                        volume_list.append('NaN')
-                        type_list.append('None')
-                        labels_list.append(0)
+                    # try extracting all metadata before appending
+                    attenuation_list.append(attenuation)
+                    volume_list.append(volume)
+                    type_list.append(lesion_type)
+                    labels_list.append(1)
+                    # except:
+                    #     print('Error')
+                    #     attenuation_list.append('NaN')
+                    #     volume_list.append('NaN')
+                    #     type_list.append('None')
+                    #     labels_list.append(0)
                        
                 else: # case has no mask, therefore no hemorrhage
                     attenuation_list.append('NaN')
