@@ -15,7 +15,7 @@ pip install git+https://github.com/DIDSR/InSilicoICH.git
 
 ## Reproducing Figures
 
-Run notebooks or `bash run_all.sh`
+Run notebooks or `bash notebooks/figure_run_all.sh`
 
 ## CAD Model Weights
 
