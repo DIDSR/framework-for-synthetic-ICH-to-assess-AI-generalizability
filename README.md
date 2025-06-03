@@ -13,6 +13,10 @@ pip install git+https://github.com/DIDSR/InSilicoICH.git
 # or: `pip install -e .` from local InSilicoICH clone 
 ```
 
+## Reproducing Figures
+
+Run notebooks or `bash run_all.sh`
+
 ## CAD Model Weights
 
 Model training was forked here: https://github.com/jmweaver-FDA/rsna_2019_gc
