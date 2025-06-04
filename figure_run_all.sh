@@ -4,10 +4,10 @@ export BASE_DIR=/projects01/didsr-aiml/jayse.weaver/insilicoich/
 export STUDY_NAME=manuscript_100_280mA_wME
 export EXPERIMENT_NAME=kVp_mA_variation
 echo "Running all notebooks..."
-jupyter nbconvert --to notebook --execute notebooks/fig3-5_view_six_examples.ipynb
-jupyter nbconvert --to notebook --execute notebooks/fig4_compare_synth_real_distributions.ipynb
-jupyter nbconvert --to notebook --execute notebooks/fig6_kV_mA_variation.ipynb # uses EXPERIMENT_NAME for kVp/mA variation
-jupyter nbconvert --to notebook --execute notebooks/fig7_create_multimodel_ROC.ipynb
-jupyter nbconvert --to notebook --execute notebooks/fig8_compare_false_negatives.ipynb
-rm -rf notebooks/*.nbconvert.*
+jupyter nbconvert --to notebook --execute --inplace notebooks/fig3-5_view_six_examples.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/fig4_compare_synth_real_distributions.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/fig6_kV_mA_variation.ipynb # uses EXPERIMENT_NAME for kVp/mA variation
+jupyter nbconvert --to notebook --execute --inplace notebooks/fig7_create_multimodel_ROC.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/fig8_compare_false_negatives.ipynb
+# rm -rf notebooks/*.nbconvert.*
 echo "Done."
