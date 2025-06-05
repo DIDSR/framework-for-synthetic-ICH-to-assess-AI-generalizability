@@ -1,3 +1,7 @@
+jupyter
+seaborn
+sklearn
+dotenv
 asttokens==3.0.0
 certifi==2025.1.31
 charset-normalizer==3.4.1
@@ -71,7 +75,6 @@ requests==2.32.3
 scikit-image==0.25.2
 scikit-learn==1.6.1
 scipy==1.15.2
-seaborn==0.13.2
 six==1.17.0
 stack-data==0.6.3
 sympy==1.13.1

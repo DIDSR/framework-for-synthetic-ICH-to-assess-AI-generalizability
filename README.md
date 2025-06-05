@@ -16,15 +16,15 @@ Our work validates this approach by demonstrating comparable performance of an I
 
 See also [InSilicoICH](https://github.com/DIDSR/InSilicoICH)
 
-## Installation:
+## Installation
 
 See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
 
-```
+```shell
 # Best practice, use an environment rather than install in the base env
-conda create -n "my-env" python=3.11.0 # tested on python=3.11.0
-conda activate my-env
-pip install insilicoCAD_requirements.txt
+conda create -n "synthetic-ich-for-cad-evaluations" python==3.11.0 -y # tested on python=3.11.0
+conda activate synthetic-ich-for-cad-evaluations
+pip install -r insilicoCAD_requirements.txt
 pip install git+https://github.com/DIDSR/InSilicoICH.git
 # or: `pip install -e .` from local InSilicoICH clone 
 ```
@@ -35,6 +35,6 @@ Run notebooks or `bash figure_run_all.sh`
 
 ## CAD Model Weights
 
-Model training was forked here: https://github.com/jmweaver-FDA/rsna_2019_gc
+Model training was forked here: <https://github.com/jmweaver-FDA/rsna_2019_gc>
 
 [Pretrained model weights](https://doi.org/10.5281/zenodo.15602166)
