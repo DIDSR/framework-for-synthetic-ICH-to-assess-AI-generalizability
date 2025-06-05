@@ -37,4 +37,4 @@ Run notebooks or `bash figure_run_all.sh`
 
 Model training was forked here: https://github.com/jmweaver-FDA/rsna_2019_gc
 
-[Pretrained weights](https://zenodo.org/badge/DOI/10.5281/zenodo.15602167.svg)](https://doi.org/10.5281/zenodo.15602167)
+[Pretrained model weights](https://doi.org/10.5281/zenodo.15602166)
