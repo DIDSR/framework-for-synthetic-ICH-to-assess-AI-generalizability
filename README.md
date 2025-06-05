@@ -18,6 +18,10 @@ See also [InSilicoICH](https://github.com/DIDSR/InSilicoICH)
 
 ## Installation
 
+An independent dataset of real CT examples with and without ICH must be [downloaded here](https://physionet.org/content/ct-ich/1.3.1/).
+
+After downloading, place the contents inside `datasets/computed-tomography-images-for-intracranial...` prior to regenerating figures. 
+
 See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
 
 ```shell
