@@ -31,15 +31,15 @@ git clone https://github.com/DIDSR/synthetic-ich-for-cad-evaluations.git
 cd synthetic-ich-for-cad-evaluations
 ```
 
-2. Create a python environment
+### 2. Create a python environment
 
 ```shell
-conda create -n "synthetic-ich-for-cad-evaluations" python==3.11.* -y
+conda create -n synthetic-ich-for-cad-evaluations python==3.11.* -y
 conda activate synthetic-ich-for-cad-evaluations
 pip install -r requirements.txt
 ```
 
-3. Finally, set a directory to store any downloaded datasets
+### 3. Finally, set a directory to store any downloaded datasets
 
 Default is in your working directory in `./datasets`
 

@@ -27,7 +27,8 @@ if [ -z "${BASE_DIR}" ]; then
 fi
 
 echo "Running all notebooks..."
-
+# Below are the primary notebooks used to generate figures for the paper.
+# Other complementary notebooks are available in the notebooks/ directory.
 jupyter nbconvert --to notebook --execute --inplace notebooks/fig3-5_view_six_examples.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/fig4_compare_synth_real_distributions.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/fig6_kV_mA_variation.ipynb # uses EXPERIMENT_NAME for kVp/mA variation
