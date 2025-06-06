@@ -24,7 +24,7 @@ After downloading, place the contents inside `datasets/computed-tomography-image
 
 See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
 
-1. Clone the repo locally
+### 1. Clone the repo locally
 
 ```shell
 git clone https://github.com/DIDSR/synthetic-ich-for-cad-evaluations.git
