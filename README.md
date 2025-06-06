@@ -19,6 +19,11 @@ Our work validates this approach by demonstrating comparable performance of an I
 | ![real ich](manuscript_figures/Figure3.png) <br> **Manuscript Figure 3** | ![synthetic ich](manuscript_figures/Figure5.png) <br> **Manuscript Figure 5** |
 | Examples of hemorrhages from an external independent ICH dataset (Hssayeni), showcasing the three hemorrhage subtypes modeled in this work: Intraparenchymal (IPH, left), subdural (SDH, left), and epidural (EDH, right). |  Small (top row) and large (bottom row) examples of each synthetic hemorrhage type: Intraparenchymal (IPH, left), subdural (SDH, left), and epidural (EDH, right).                                   |
 
+| Comparable Feature Distributions                                  | Real vs. Synthetic Task-Based Validation                            |
+| :------------------------------------------------------------- | :------------------------------------------------------------------ |
+| ![real ich](manuscript_figures/Figure4.png) <br> **Manuscript Figure 4** | ![Task-Based Validation](manuscript_figures/Figure7.png) <br> **Manuscript Figure 5** |
+|  Histograms and kernel density estimates for the (A) volume in mL and (B) mean HU of each unique hemorrhage in the BHSD (solid lines) and the proposed synthetic dataset (dashed lines). The BHSD distributions were drawn from 1,872 unique hemorrhages, while the synthetic datasets contained 300 unique hemorrhages. |  Receiver operating characteristic (ROC) curves for detection of ICH for each dataset. The mean area under the curve (AUC) was 0.877 ± 0.024for the synthetic datasets, and 0.919 ± 0.017 for the real dataset. |
+
 Synthetic ICH datasets were generated using [InSilicoICH](https://github.com/DIDSR/InSilicoICH).
 
 ## Installation
