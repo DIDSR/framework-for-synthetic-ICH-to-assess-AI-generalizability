@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 echo "Setting environment variables..."
-export BASE_DIR=/projects01/didsr-aiml/jayse.weaver/insilicoich/
 export STUDY_NAME=manuscript_100_280mA_wME
 export EXPERIMENT_NAME=kVp_mA_variation
 echo "Running all notebooks..."
