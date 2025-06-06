@@ -28,6 +28,7 @@ See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
 
 ```shell
 git clone https://github.com/DIDSR/synthetic-ich-for-cad-evaluations.git
+cd synthetic-ich-for-cad-evaluations
 ```
 
 2. Create a python environment
