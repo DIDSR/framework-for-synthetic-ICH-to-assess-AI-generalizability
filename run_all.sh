@@ -17,15 +17,17 @@ if [ -z "${BASE_DIR}" ]; then
 
   # If the user input is empty, use the default path
   if [ -z "${user_input}" ]; then
-    export BASE_DIR="${DEFAULT_PATH}"
+    BASE_DIR="${DEFAULT_PATH}"
     echo "No input provided. Using default path."
   else
     # Otherwise, use the path provided by the user
-    export BASE_DIR="${user_input}"
+    BASE_DIR="${user_input}"
   fi
+  echo $BASE_DIR >> .env
 fi
 
 echo "Running all notebooks..."
+
 jupyter nbconvert --to notebook --execute --inplace notebooks/fig3-5_view_six_examples.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/fig4_compare_synth_real_distributions.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/fig6_kV_mA_variation.ipynb # uses EXPERIMENT_NAME for kVp/mA variation
