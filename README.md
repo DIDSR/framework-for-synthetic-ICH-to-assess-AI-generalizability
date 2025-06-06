@@ -24,22 +24,37 @@ After downloading, place the contents inside `datasets/computed-tomography-image
 
 See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
 
+1. Clone the repo locally
+
 ```shell
-# Best practice, use an environment rather than install in the base env
+git clone https://github.com/DIDSR/synthetic-ich-for-cad-evaluations.git
+```
+
+2. Create a python environment
+
+```shell
 conda create -n "synthetic-ich-for-cad-evaluations" python==3.11.* -y
 conda activate synthetic-ich-for-cad-evaluations
 pip install -r requirements.txt
 ```
 
-Finally, set a directory to store any downloaded datasets, t
+3. Finally, set a directory to store any downloaded datasets
+
+Default is in your working directory in `./datasets`
 
 ```shell
 echo BASE_DIR=./datasets >> .env
 ```
 
+You are now ready to run the notebooks and regenerate figures.
+
 ## Reproducing Figures
 
-Run notebooks or `bash run_all.sh`
+You can run [notebooks](notebooks) individually or all together with the [run_all](run_all.sh) script:
+
+```shell
+bash run_all.sh
+```
 
 ## CAD Model Weights
 
