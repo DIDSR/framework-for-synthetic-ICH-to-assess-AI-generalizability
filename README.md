@@ -14,6 +14,11 @@ This project introduces an open-source framework to:
 
 Our work validates this approach by demonstrating comparable performance of an ICH detection model on our synthetic dataset (AUC 0.877) versus an independent real dataset (AUC 0.919). This framework enables more comprehensive testing and evaluation of CAD devices for ICH.
 
+| Real Examples                                                  | Synthetic Examples                                                  |
+| :------------------------------------------------------------- | :------------------------------------------------------------------ |
+| ![real ich](manuscript_figures/Figure3.png) <br> **Manuscript Figure 3** | ![synthetic ich](manuscript_figures/Figure5.png) <br> **Manuscript Figure 5** |
+| Examples of hemorrhages from an external independent ICH dataset (Hssayeni), showcasing the three hemorrhage subtypes modeled in this work: Intraparenchymal (IPH, left), subdural (SDH, left), and epidural (EDH, right). |  Small (top row) and large (bottom row) examples of each synthetic hemorrhage type: Intraparenchymal (IPH, left), subdural (SDH, left), and epidural (EDH, right).                                   |
+
 See also [InSilicoICH](https://github.com/DIDSR/InSilicoICH)
 
 ## Installation
