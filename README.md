@@ -28,7 +28,7 @@ See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
 # Best practice, use an environment rather than install in the base env
 conda create -n "synthetic-ich-for-cad-evaluations" python==3.11.0 -y # tested on python=3.11.0
 conda activate synthetic-ich-for-cad-evaluations
-pip install -r insilicoCAD_requirements.txt
+pip install -r requirements.txt
 pip install git+https://github.com/DIDSR/InSilicoICH.git
 # or: `pip install -e .` from local InSilicoICH clone 
 ```
