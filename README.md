@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15602167.svg)](https://doi.org/10.5281/zenodo.15602167)
 
-# Synthetic ICH for CAD Evaluations
+# Synthetic ICH for CAD Development
 
 This repository contains the code and methodologies to reproduce the results presented in the paper: [Knowledge-based synthetic intracranial hemorrhage CT datasets for device evaluations and generalizability assessments](https://zenodo.org/records/15602167/files/PREPRINT%20June5%20Synthetic%20ICH%20for%20CAD%20Evaluations.pdf?download=1).
 
