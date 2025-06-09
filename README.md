@@ -30,8 +30,6 @@ Synthetic ICH datasets were generated using [InSilicoICH](https://github.com/DID
 
 Note: Figures [3](manuscript_figures/Figure3.png), [8](manuscript_figures/Figure8.png) require the following dataset of real CT examples with and without ICH to be [downloaded here](https://physionet.org/content/ct-ich/1.3.1/). To reproduce these figures, place the downloaded contents inside `datasets/computed-tomography-images-for-intracranial...` prior to regenerating figures.
 
-See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
-
 ### 1. Clone the repo locally
 
 ```shell
@@ -67,8 +65,8 @@ bash run_all.sh
 
 This will take longer to run the first time as missing datasets will be downloaded to `BASE_DIR`, (4.5 GB for notebook [fig3-5_view_six_examples](notebooks.fig3-5_view_six_examples.ipynb) and (480 MB for notebook [fig6_kV_mA_variation](notebooks/fig6_kV_mA_variation.ipynb)) subsequent runs should take around 25-30 s to complete.
 
-## CAD Model Weights
+## Supplementary Notebooks
 
-Model training was forked here: <https://github.com/jmweaver-FDA/rsna_2019_gc>
+Additional [notebooks](notebooks) are included that were not directly related to generating manuscript figures but can be helpful for visualizing results or running the pipeline end to end (see [single_case_pipeline](notebooks/single_case_pipeline.ipynb)).
 
-[Pretrained model weights](https://doi.org/10.5281/zenodo.15602166)
+The pretrained ICH detection model used in generating [figure 5](manuscript_figures/Figure5.png) can be downloaded directly here: [Pretrained model weights](https://doi.org/10.5281/zenodo.15602166), with retraining methods and details available here: [RSNA 2019 ICH Detection Grand Challenge Fork](https://github.com/jmweaver-FDA/rsna_2019_gc).
