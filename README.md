@@ -62,6 +62,8 @@ You can run [notebooks](notebooks) individually or all together with the [run_al
 bash run_all.sh
 ```
 
+This will take longer to run the first time as missing datasets will be downloaded to `BASE_DIR`, (4.5 GB for notebook [fig3-5_view_six_examples](notebooks.fig3-5_view_six_examples.ipynb) and (480 MB for notebook [fig6_kV_mA_variation](notebooks/fig6_kV_mA_variation.ipynb)) subsequent runs should take around 25-30 s to complete.
+
 ## CAD Model Weights
 
 Model training was forked here: <https://github.com/jmweaver-FDA/rsna_2019_gc>
