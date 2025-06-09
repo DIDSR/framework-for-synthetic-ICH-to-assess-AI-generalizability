@@ -28,9 +28,7 @@ Synthetic ICH datasets were generated using [InSilicoICH](https://github.com/DID
 
 ## Installation
 
-Note: Figures 3, 8 require the following dataset of real CT examples with and without ICH to be [downloaded here](https://physionet.org/content/ct-ich/1.3.1/).
-
-After downloading, place the contents inside `datasets/computed-tomography-images-for-intracranial...` prior to regenerating figures.
+Note: Figures [3](manuscript_figures/Figure3.png), [8](manuscript_figures/Figure8.png) require the following dataset of real CT examples with and without ICH to be [downloaded here](https://physionet.org/content/ct-ich/1.3.1/). To reproduce these figures, place the downloaded contents inside `datasets/computed-tomography-images-for-intracranial...` prior to regenerating figures.
 
 See also [single_case_pipeline](notebooks/single_case_pipeline.ipynb)
 
