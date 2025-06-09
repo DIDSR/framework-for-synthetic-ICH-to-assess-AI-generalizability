@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15602167.svg)](https://doi.org/10.5281/zenodo.15602167)
 
-# Synthetic ICH for CAD Evaluations
+# Synthetic ICH for CAD Development
 
 This repository contains the code and methodologies to reproduce the results presented in the paper: [Knowledge-based synthetic intracranial hemorrhage CT datasets for device evaluations and generalizability assessments](https://zenodo.org/records/15602167/files/PREPRINT%20June5%20Synthetic%20ICH%20for%20CAD%20Evaluations.pdf?download=1).
 
@@ -19,7 +19,12 @@ Our work validates this approach by demonstrating comparable performance of an I
 | ![real ich](manuscript_figures/Figure3.png) <br> **Manuscript Figure 3** | ![synthetic ich](manuscript_figures/Figure5.png) <br> **Manuscript Figure 5** |
 | Examples of hemorrhages from an external independent ICH dataset (Hssayeni), showcasing the three hemorrhage subtypes modeled in this work: Intraparenchymal (IPH, left), subdural (SDH, left), and epidural (EDH, right). |  Small (top row) and large (bottom row) examples of each synthetic hemorrhage type: Intraparenchymal (IPH, left), subdural (SDH, left), and epidural (EDH, right).                                   |
 
-See also [InSilicoICH](https://github.com/DIDSR/InSilicoICH)
+| Comparable Feature Distributions                                  | Real vs. Synthetic Task-Based Validation                            |
+| :------------------------------------------------------------- | :------------------------------------------------------------------ |
+| ![real ich](manuscript_figures/Figure4.png) <br> **Manuscript Figure 4** | ![Task-Based Validation](manuscript_figures/Figure7.png) <br> **Manuscript Figure 5** |
+|  Histograms and kernel density estimates for the (A) volume in mL and (B) mean HU of each unique hemorrhage in the BHSD (solid lines) and the proposed synthetic dataset (dashed lines). The BHSD distributions were drawn from 1,872 unique hemorrhages, while the synthetic datasets contained 300 unique hemorrhages. |  Receiver operating characteristic (ROC) curves for detection of ICH for each dataset. The mean area under the curve (AUC) was 0.877 ± 0.024for the synthetic datasets, and 0.919 ± 0.017 for the real dataset. |
+
+Synthetic ICH datasets were generated using [InSilicoICH](https://github.com/DIDSR/InSilicoICH).
 
 ## Installation
 
