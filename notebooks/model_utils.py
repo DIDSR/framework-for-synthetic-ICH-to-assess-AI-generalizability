@@ -12,6 +12,7 @@ import nibabel as nib
 import matplotlib.pyplot as plt
 import skimage
 
+
 def apply_window(image, center, width):
     '''taken directly from https://github.com/darraghdog/rsna'''
     image = image.copy()
@@ -20,6 +21,7 @@ def apply_window(image, center, width):
     image[image < min_value] = min_value
     image[image > max_value] = max_value
     return image
+
 
 def apply_window_policy(image):
     '''taken directly from https://github.com/darraghdog/rsna'''
@@ -76,13 +78,13 @@ def prepare_images(filepath, options, ID, save_dir):
 
                         image = torch.from_numpy(result["image"])
                         image = torch.permute(image, (2, 1, 0)).unsqueeze(0)
-                        
+
                         volume[idx, :, :, :] = image
                     except:
                         print('Failed to read and convert ' + file)
         else:
             slice_thickness = 5
-            
+
             for idx, file in enumerate(files):
                 if Path(file).suffix == '.dcm':
                     try:
@@ -109,7 +111,7 @@ def prepare_images(filepath, options, ID, save_dir):
                     ds.PixelData = (image - dicom.RescaleIntercept).astype(np.int16)
                     ds.SliceThickness = 5
                     ds.save_as(os.path.join(save_dir, str(ID)) + '_' + str(i) + '_5mm.dcm')
-                    
+
                 image = apply_window_policy(image)
                 image -= image.min((0,1))
                 image = (255*image).astype(np.uint8)
@@ -123,15 +125,11 @@ def prepare_images(filepath, options, ID, save_dir):
                 result = transform(image=image)
                 image = torch.from_numpy(result["image"])
                 image = torch.permute(image, (2, 1, 0)).unsqueeze(0)
-                
-                volume[i, :, :, :] = image
-                #except:
-                    #print('Failed to read and convert ' + file)
 
-            #nib.save(nib.Nifti1Image(new_volume.transpose(2, 1, 0), np.eye(4)), '/gpfs_projects/jayse.weaver/pedsilicoICH_10-09-2024_5mm/temp_minus5HU.nii')
+                volume[i, :, :, :] = image
 
         return volume, files
-    
+
     else: # path must be a single image
         if Path(filepath).suffix == '.jpg':
             if options['verbose']: print('Loading and preprocessing .jpg file')
@@ -145,7 +143,7 @@ def prepare_images(filepath, options, ID, save_dir):
             img = torch.permute(img, (2, 1, 0)).unsqueeze(0)
 
             volume = img
-            
+
         elif Path(filepath).suffix == '.nii':
             if options['verbose']: print('Loading and preprocessing NifTI file')
             nifti_file = nib.load(filepath)
@@ -170,7 +168,7 @@ def prepare_images(filepath, options, ID, save_dir):
                 result = transform(image=image)
                 image = torch.from_numpy(result["image"])
                 image = torch.permute(image, (2, 1, 0)).unsqueeze(0)
-                
+
                 volume[slice, :, :, :] = image
 
         else:
@@ -178,13 +176,14 @@ def prepare_images(filepath, options, ID, save_dir):
 
     return volume, filepath
 
+
 def classify_images(volume, options, model_path, device):
     """Receive input volume of dimensions [num_images, 3, 480, 480] and
     performs classification with pre-trained models"""
 
     num_images = volume.shape[0]
     if options['verbose']: print('Starting classification')
-    
+
     # Load and set up classifier
     classifier_model = torch.load(model_path + 'resnext101_32x8d_wsl_checkpoint.pth', weights_only=False, map_location=device) # Load model arch
     classifier_model.fc = nn.Linear(2048, 6) # 6 classes
@@ -198,7 +197,7 @@ def classify_images(volume, options, model_path, device):
     class Identity(nn.Module):
         def __init__(self):
             super(Identity, self).__init__()
-            
+  
         def forward(self, x):
             return x
 
@@ -228,13 +227,13 @@ def classify_images(volume, options, model_path, device):
             x = x.permute(0, 3, 2, 1)  # (N, T, 1, K)
             x = x.squeeze(2)  # (N, T, K)
             return x
-    
+
     class NeuralNet(nn.Module):
         def __init__(self, embed_size=2048*3, LSTM_UNITS=64, DO = 0.3):
             super(NeuralNet, self).__init__()
 
             self.embedding_dropout = SpatialDropout(0.0) #DO)
-            
+
             self.lstm1 = nn.LSTM(embed_size, LSTM_UNITS, bidirectional=True, batch_first=True)
             self.lstm2 = nn.LSTM(LSTM_UNITS * 2, LSTM_UNITS, bidirectional=True, batch_first=True)
 
@@ -247,19 +246,19 @@ def classify_images(volume, options, model_path, device):
             h_embedding = x
 
             h_embadd = torch.cat((h_embedding[:,:,:2048], h_embedding[:,:,:2048]), -1)
-            
+
             h_lstm1, _ = self.lstm1(h_embedding)
             h_lstm2, _ = self.lstm2(h_lstm1)
-            
+
             h_conc_linear1  = F.relu(self.linear1(h_lstm1))
             h_conc_linear2  = F.relu(self.linear2(h_lstm2))
-            
+
             hidden = h_lstm1 + h_lstm2 + h_conc_linear1 + h_conc_linear2 + h_embadd
 
             output = self.linear(hidden)
-            
+
             return output
-    
+
     # Create model 
     lstm_model = NeuralNet(LSTM_UNITS=2048, DO = 0.3)
     lstm_model = lstm_model.to(device)
@@ -269,7 +268,7 @@ def classify_images(volume, options, model_path, device):
 
     lstm_model.eval()
     if options['verbose']: print('Evaluating embeddings')
-    
+
     slice_by_slice = False # False is the original implementation for the grand challenge submission
     if slice_by_slice:
         values = np.zeros(shape=(embeddings.shape[1], 6))

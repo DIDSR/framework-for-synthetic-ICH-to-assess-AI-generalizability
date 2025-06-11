@@ -1,15 +1,15 @@
 import os
-import sys
 import pandas as pd
 from pathlib import Path
 import numpy as np
 from sklearn import metrics
-import matplotlib.pyplot as plt
 from tqdm import tqdm
-import re
+import torch
+from dotenv import load_dotenv
 
-from image_utils import *
-from model_utils import *
+from model_utils import prepare_images, classify_images
+
+load_dotenv()
 
 # Large datasets too cumbersome to run via notebook (run_CAD_on_data.ipynb)
 options = {
@@ -24,14 +24,13 @@ options = {
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('using device ' + str(device))
 
-#dataset_path = Path('../datasets')
-dataset_path = Path('/projects01/didsr-aiml/jayse.weaver/insilicoich/')
+dataset_path = Path(os.environ['DATASET_PATH'])  # Set this to your dataset path
 dataset_names = ['manuscript_100_280mA_wME', 'manuscript_100_280mA_noME']
 
-prepath = '/home/jayse.weaver/model_files/'
+prepath = Path(os.environ['MODEL_PATH'])  # Set this to your model path
 model_names = ['CAD_1', 'CAD_2', 'CAD_3']
 
-save_dir = '/home/jayse.weaver/temp_images/new/' # optional save directory if save_jpg or save_dcm = True
+save_dir = './temp_images/new/' # optional save directory if save_jpg or save_dcm = True
 
 for model in model_names:
     print('Processing with model ' + str(model))
@@ -75,23 +74,16 @@ for model in model_names:
                     # if case has hemorrhage, extract metadata from dataframe
                     # TODO: fix insilicoICH metadata generation (currently messy with added strings and brackets)
                     temp_df = metadata_dropna.loc[metadata_dropna['Name'] == case]
-                    
+
                     attenuation = float(temp_df['LesionAttenuation(HU)'].unique()[0].replace('[','').replace(']',''))
                     volume = temp_df['LesionVolume(mL)'].apply(lambda x: x.replace('[','').replace(']','')).astype(float).sum()
                     lesion_type = temp_df['Subtype'].unique()[0].replace('[','').replace(']','')
 
-                    # try extracting all metadata before appending
                     attenuation_list.append(attenuation)
                     volume_list.append(volume)
                     type_list.append(lesion_type)
                     labels_list.append(1)
-                    # except:
-                    #     print('Error')
-                    #     attenuation_list.append('NaN')
-                    #     volume_list.append('NaN')
-                    #     type_list.append('None')
-                    #     labels_list.append(0)
-                       
+
                 else: # case has no mask, therefore no hemorrhage
                     attenuation_list.append('NaN')
                     volume_list.append('NaN')
@@ -123,6 +115,6 @@ for model in model_names:
         dfsyn['Subtype'] = type_list
 
         if options['save_csv']: dfsyn.to_csv(path / (str(dataset) + '_' + model + '_results.csv'))
-        
+
         # another optional CSV - this is just the FPR, TPR, and thresholds that can easily be created again from *_results.csv
         # if options['save_csv']: roc_df_syn.to_csv(path / (str(dataset) + '_ROC.csv'))
