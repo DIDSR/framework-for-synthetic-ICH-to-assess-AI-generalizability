@@ -1,8 +1,8 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15686061.svg)](https://doi.org/10.5281/zenodo.15686061)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15691337.svg)](https://doi.org/10.5281/zenodo.15691337)
 
 # Framework for Synthetic ICH to Assess AI Generalizability
 
-This repository contains the code and methodologies to reproduce the results presented in the paper: **A Knowledge-Based Framework for Generating Synthetic Intracranial Hemorrhage CT Data to Assess AI Generalizability** [preprint link](https://zenodo.org/records/15686061).
+This repository contains the code and methodologies to reproduce the results presented in the paper: **A Knowledge-Based Framework for Generating Synthetic Intracranial Hemorrhage CT Data to Assess AI Generalizability** [preprint link](https://zenodo.org/records/15691337).
 
 Deep learning models for Computer-Assisted Detection (CAD) of intracranial hemorrhage (ICH) often struggle with generalizability when encountering CT data with characteristics underrepresented in their training sets (e.g., variations in patient demographics, hemorrhage types, or image acquisition parameters).
 
