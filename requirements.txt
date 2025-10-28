@@ -5,3 +5,4 @@ nibabel
 seaborn
 dotenv
 pydicom
+git+https://github.com/DIDSR/InSilicoICH.git

@@ -1,16 +1,21 @@
-import albumentations as A
-import cv2
-from pathlib import Path
 import sys
 import os
+from pathlib import Path
+import requests
+import zipfile
+import io
+
+import albumentations as A
+# import cv2
 import torch
 from torch import nn
 from torch.nn import functional as F
 import numpy as np 
 import pydicom
 import nibabel as nib
-import matplotlib.pyplot as plt
 import skimage
+from VITools.phantom import resize
+
 
 
 def apply_window(image, center, width):
@@ -39,144 +44,6 @@ def apply_window_policy(image):
     return image
 
 
-def prepare_images(filepath, options, ID, save_dir):
-    """Receive input image (JPG, NifTI, DICOM) and 
-    returns tensor for input into trained model
-    Modified from: https://github.com/darraghdog/rsna"""
-    
-    mean_img = [0.22363983, 0.18190407, 0.2523437 ]
-    std_img = [0.32451536, 0.2956294,  0.31335256]
-    transform = A.Normalize(mean=mean_img, std=std_img, max_pixel_value=255.0, p=1.0)
-
-    if os.path.isdir(filepath):
-        files = [f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
-        files = sorted(files)
-
-        if options['native_resolution']:
-            volume = torch.zeros((len(files), 3, options['size'][0], options['size'][1]))
-            for idx, file in enumerate(files):
-                if Path(file).suffix == '.dcm':
-                    try:
-                        # Convert from dicom to three channels (option to save as jpg)
-                        filenm = file.split('.')[0]
-                        dicom = pydicom.dcmread(os.path.join(filepath, file))
-                        image = dicom.pixel_array
-                        
-                        image = image * dicom.RescaleSlope + dicom.RescaleIntercept
-                        
-                        image = apply_window_policy(image)
-                        image -= image.min((0,1))
-                        image = (255*image).astype(np.uint8)
-                        #image = np.rot90(image,k=2) # this may not be necessary, but rotating to same orientation as RSNA training data
-
-                        # Resize and normalize
-                        image = cv2.resize(image, (480, 480))
-                        result = transform(image=image)
-
-                        if options['save_jpg']:
-                            cv2.imwrite(os.path.join(save_dir, filenm) + '.jpg', result["image"])
-
-                        image = torch.from_numpy(result["image"])
-                        image = torch.permute(image, (2, 1, 0)).unsqueeze(0)
-
-                        volume[idx, :, :, :] = image
-                    except:
-                        print('Failed to read and convert ' + file)
-        else:
-            slice_thickness = 5
-
-            for idx, file in enumerate(files):
-                if Path(file).suffix == '.dcm':
-                    try:
-                        filenm = file.split('.')[0]
-                        dicom = pydicom.dcmread(os.path.join(filepath, file))
-                        image = dicom.pixel_array
-
-                        image = image * dicom.RescaleSlope + dicom.RescaleIntercept
-                        if idx == 0:
-                            dcm_volume = np.zeros((len(files), image.shape[0], image.shape[1]))
-                        dcm_volume[idx, :, :] = image
-                    except:
-                        print('Failed to read and convert ' + file)
-
-            new_volume = skimage.measure.block_reduce(dcm_volume, block_size=(slice_thickness,1,1), func=np.mean, cval=np.mean(dcm_volume))
-            volume = torch.zeros((new_volume.shape[0], 3, options['size'][0], options['size'][1]))
-            for i in range(new_volume.shape[0]):
-                #try:
-                image = new_volume[i, :, :]
-
-                if options['save_dcm']:
-                    ds = dicom
-                    ds.PatientName = ds.PatientID = str(ID)
-                    ds.PixelData = (image - dicom.RescaleIntercept).astype(np.int16)
-                    ds.SliceThickness = 5
-                    ds.save_as(os.path.join(save_dir, str(ID)) + '_' + str(i) + '_5mm.dcm')
-
-                image = apply_window_policy(image)
-                image -= image.min((0,1))
-                image = (255*image).astype(np.uint8)
-                #image = np.rot90(image,k=2) # this may not be necessary, but rotating to same orientation as RSNA training data
-
-                if options['save_jpg']:
-                    cv2.imwrite(os.path.join(save_dir, str(ID)) + '_' + str(i) + '_new5mm.jpg', image)
-
-                # Resize and normalize
-                image = cv2.resize(image, (480, 480))
-                result = transform(image=image)
-                image = torch.from_numpy(result["image"])
-                image = torch.permute(image, (2, 1, 0)).unsqueeze(0)
-
-                volume[i, :, :, :] = image
-
-        return volume, files
-
-    else: # path must be a single image
-        if Path(filepath).suffix == '.jpg':
-            if options['verbose']: print('Loading and preprocessing .jpg file')
-            if options['verbose']: print('Assuming channels have been properly set')
-            img = cv2.imread(filepath)
-
-            # Resize and normalize
-            img = cv2.resize(img, (480, 480))
-            result = transform(image=img)
-            img = torch.from_numpy(result["image"])
-            img = torch.permute(img, (2, 1, 0)).unsqueeze(0)
-
-            volume = img
-
-        elif Path(filepath).suffix == '.nii':
-            if options['verbose']: print('Loading and preprocessing NifTI file')
-            nifti_file = nib.load(filepath)
-            nifti_img = nifti_file.get_fdata()
-
-            volume = torch.zeros((nifti_img.shape[2], 3, options['size'][0], options['size'][1]))
-
-            nifti_img = nifti_img * nifti_file.dataobj.slope + nifti_file.dataobj.inter
-
-            for slice in range(nifti_img.shape[2]):
-                image = apply_window_policy(nifti_img[:, :, slice])
-                image -= image.min((0,1))
-                image = (255*image).astype(np.uint8)
-                image = np.rot90(image,k=1) # this may not be necessary, but rotating to same orientation as RSNA training data
-
-                if slice == 16:
-                    if options['save_jpg']:
-                        cv2.imwrite(os.path.join(save_dir, ID + '_slice'+str(slice)) + '.jpg', image)
-
-                # Resize and normalize
-                image = cv2.resize(image, (480, 480))
-                result = transform(image=image)
-                image = torch.from_numpy(result["image"])
-                image = torch.permute(image, (2, 1, 0)).unsqueeze(0)
-
-                volume[slice, :, :, :] = image
-
-        else:
-            sys.exit('No appropriate extension')
-
-    return volume, filepath
-
-
 def classify_images(volume, options, model_path, device):
     """Receive input volume of dimensions [num_images, 3, 480, 480] and
     performs classification with pre-trained models"""
@@ -185,14 +52,15 @@ def classify_images(volume, options, model_path, device):
     if options['verbose']: print('Starting classification')
 
     # Load and set up classifier
-    classifier_model = torch.load(model_path + 'resnext101_32x8d_wsl_checkpoint.pth', weights_only=False, map_location=device) # Load model arch
+    model_path = Path(model_path)
+    classifier_model = torch.load(model_path, weights_only=False, map_location=device) # Load model arch
     classifier_model.fc = nn.Linear(2048, 6) # 6 classes
     classifier_model.to(device)
     # Model was trained with DDP so need this even with 1 GPU
     classifier_model = nn.DataParallel(classifier_model, device_ids=list(range(1)), output_device=device)
     for param in classifier_model.parameters():
         param.requires_grad = False
-    classifier_model.load_state_dict(torch.load(model_path + 'model_480_epoch2_fold6.bin',  map_location=device)) # Load weights
+    classifier_model.load_state_dict(torch.load(next(model_path.parent.glob('model_*.bin')),  map_location=device)) # Load weights
 
     class Identity(nn.Module):
         def __init__(self):
@@ -262,7 +130,7 @@ def classify_images(volume, options, model_path, device):
     # Create model 
     lstm_model = NeuralNet(LSTM_UNITS=2048, DO = 0.3)
     lstm_model = lstm_model.to(device)
-    lstm_model.load_state_dict(torch.load(model_path + 'lstm_gepoch2_lstmepoch11_fold6.bin',  map_location=device))
+    lstm_model.load_state_dict(torch.load(next(model_path.parent.glob('lstm_*.bin')),  map_location=device))
     for param in lstm_model.parameters():
         param.requires_grad = False
 
@@ -286,5 +154,59 @@ def classify_images(volume, options, model_path, device):
         if options['verbose']:
             for i in range(values.shape[0]):
                 print('slice ' + str(i) + ': ' + str(values[i, -1]))
-
     return values
+
+
+def predict_image(image, model, device='cuda'):
+    # image preparation lifted from prepare_images (intended for .dcm and .nii)
+    labels = ['EDH', 'IPH', 'IVH', 'SAH', 'SDH', 'Any']
+    mean_img = [0.22363983, 0.18190407, 0.2523437 ]
+    std_img = [0.32451536, 0.2956294,  0.31335256]
+    transform = A.Normalize(mean=mean_img, std=std_img, max_pixel_value=255.0, p=1.0)
+
+    image = apply_window_policy(image)
+    image -= image.min((0,1))
+    image = (255*image).astype(np.uint8)
+    #cv2.imwrite('test.jpg', image)
+    image = resize(image, (480, 480)) # use Monai instead or VITools.resize
+    result = transform(image=image)
+    image = torch.from_numpy(result["image"])
+    image = torch.permute(image, (2, 1, 0)).unsqueeze(0)
+
+
+    # classify images
+    options = {'verbose': False}
+    output = classify_images(image, options, model, device=device)
+    return dict(zip(labels, output[0]))
+
+
+def download_and_unzip(url, extract_to='.'):
+    """
+    Downloads a zip file from a given URL and extracts its contents.
+
+    Args:
+        url (str): The URL of the zip file.
+        extract_to (str): The directory where the contents should be extracted.
+                          Defaults to the current directory.
+    """
+    try:
+        # Download the zip file
+        print(f"Downloading from {url}...")
+        response = requests.get(url, stream=True)
+        response.raise_for_status()  # Raise an exception for bad status codes
+
+        # Create a BytesIO object from the downloaded content
+        zip_file_in_memory = io.BytesIO(response.content)
+
+        # Open the zip file and extract its contents
+        with zipfile.ZipFile(zip_file_in_memory, 'r') as zip_ref:
+            print(f"Extracting contents to {os.path.abspath(extract_to)}...")
+            zip_ref.extractall(extract_to)
+        print("Download and extraction complete.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading the file: {e}")
+    except zipfile.BadZipFile:
+        print("Error: The downloaded file is not a valid zip file.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
