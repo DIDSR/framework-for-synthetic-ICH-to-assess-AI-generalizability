@@ -1,3 +1,9 @@
+o This repository has been archived and is no longer maintained.
+
+o The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.
+
+o It should not be used in production systems.
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15691337.svg)](https://doi.org/10.5281/zenodo.15691337)
 
 # Framework for Synthetic ICH to Assess AI Generalizability
